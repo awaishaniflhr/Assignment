@@ -7,12 +7,31 @@ import {
   Image,
   TextInput,
   Modal,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
-import {txt, white} from './src/utilis/colors';
+import {black, txt, white} from './src/utilis/colors';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const App = () => {
   const [modalInfo, setModalInfo] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(
+    'https://assets.nationbuilder.com/unitela/pages/5683/attachments/original/1670289567/default-headshot.png?1670289567',
+  );
+
+  const OpenGallery = () => {
+    console.log('gallery opened');
+    let options = {
+      storageOptions: {
+        path: 'image',
+        mediaType: 'photo',
+        cameraType: 'front',
+      },
+    };
+    launchImageLibrary(options, response => {
+      setSelectedImage(response.assets[0].uri);
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.searchSec}>
@@ -47,7 +66,9 @@ const App = () => {
         <Text style={styles.normalTxt}>
           Lorem ipsus dolor sit amen, something important to say here
         </Text>
-        <TouchableOpacity style={styles.checkInBtn}>
+        <TouchableOpacity
+          onPress={() => setModalInfo(true)}
+          style={styles.checkInBtn}>
           <Text style={styles.checkInTxt}>Add Check In</Text>
         </TouchableOpacity>
       </ImageBackground>
@@ -61,58 +82,152 @@ const App = () => {
           Alert.alert('Modal has been closed.');
           setModalInfo(!modalInfo);
         }}>
-        <View style={styles.centeredViewTranslator}>
-          <View
-            style={[
-              styles.modalViewTranslator,
-
-            ]}>
-            
+        <View style={styles.centeredView}>
+          <View style={[styles.modalView]}>
+            <View style={styles.modalTitleSec}>
+              <Text style={{fontSize: 16, color: 'black'}}>Add Check In </Text>
+              <TouchableOpacity onPress={() => setModalInfo(false)}>
+                <Image
+                  resizeMode="contain"
+                  style={{width: 16, height: 16}}
+                  source={require('../Assignment/src/assets/close.png')}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputTitleSec}>
               <Text
-                style={[
-                  styles.categoryTxtTranslator,
-                  {
-                    color: 'gray',
-                    fontSize: 16,
-                    fontFamily: 'Inter-Medium',
-                    marginLeft: 10,
-                    alignSelf: 'flex-start',
-                  },
-                ]}
-                onPress={() => groupInfo()}>
-                Group Info
+                style={{
+                  fontSize: 16,
+                  color: 'black',
+                  marginBottom: 20,
+                  fontWeight: '500',
+                }}>
+                Title{' '}
               </Text>
-            
+              <TextInput
+                placeholderTextColor={'#B4B4B4'}
+                placeholder="Enter title"
+                style={{
+                  width: '100%',
+                  height: 45,
+                  borderColor: '#D9D9D9',
+                  borderWidth: 1,
+                  borderRadius: 6,
+                  paddingHorizontal: 10,
+                  color: 'black',
+                }}
+              />
+            </View>
+            <View style={styles.uploadImgSec}>
               <Text
-                style={[
-                  styles.categoryTxtTranslator,
-                  {
-                    color: 'gray',
-                    fontSize: 16,
-                    fontFamily: 'Inter-Medium',
-                  },
-                ]}
-                onPress={() => handleInfo()}>
-                Contact Info
-              </Text>
-            
-            <View style={styles.seprator}></View>
-            
-              <Text
-                style={[
-                  styles.categoryTxtTranslator,
-                  {
-                    color: '#E00000',
-                    fontSize: 16,
-                    fontFamily: 'Inter-SemiBold',
-                    marginLeft: 10,
-                    alignSelf: 'flex-start',
-                  },
-                ]}
-                onPress={() => handleDelete()}>
-                Delete Group
+                style={{
+                  fontSize: 16,
+                  color: 'black',
+                  marginBottom: 20,
+                  fontWeight: '500',
+                }}>
+                Upload Image
               </Text>
 
+              <TouchableOpacity
+              onPress={() => OpenGallery()}
+                style={{
+                  width: '100%',
+                  height: 221,
+                  borderColor: '#D9D9D9',
+                  borderWidth: 2.5,
+                  borderRadius: 6,
+                  borderStyle: 'dashed',
+                  paddingHorizontal: 10,
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    alignSelf: 'center',
+                    marginBottom: 20,
+                  }}
+                  source={require('../Assignment/src/assets/uploadImg.png')}
+                />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'black',
+                    marginBottom: 5,
+                    fontWeight: '400',
+                    textAlign: 'center',
+                    width: '85%',
+                    alignSelf: 'center',
+                  }}>
+                  Click or drag file to this area to upload
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: 'black',
+                    marginBottom: 20,
+                    fontWeight: '400',
+                    textAlign: 'center',
+                    width: '85%',
+                    alignSelf: 'center',
+                    lineHeight: 20,
+                  }}>
+                  Support for a single or bulk upload. Strictly prohibit from
+                  uploading company data or other band files
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                borderWidth: 0.6,
+                borderColor: '#D9D9D9',
+                marginVertical: 25,
+              }}
+            />
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'flex-end',
+                paddingRight: 20,
+              }}>
+              <TouchableOpacity
+              onPress={()=>setModalInfo(false)}
+                style={{
+                  width: 75,
+                  height: 32,
+                  borderWidth: 1,
+                  marginRight: 20,
+                  borderColor: '#D9D9D9',
+                  borderRadius: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: black, fontSize: 14, fontWeight: '400'}}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+              onPress={()=>setModalInfo(false)}
+                style={{
+                  width: 60,
+                  height: 32,
+                  borderWidth: 1,
+                  backgroundColor: '#7B5AFF',
+                  borderColor: '#D9D9D9',
+                  borderRadius: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: white, fontSize: 14, fontWeight: '400'}}>
+                  Add
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -133,11 +248,15 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 45,
     alignSelf: 'center',
-    backgroundColor: 'lightgray',
+    backgroundColor: white,
     borderRadius: 20,
     marginTop: 20,
     paddingHorizontal: 10,
     flexDirection: 'row',
+    elevation: 3,
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 1.15,
+    shadowRadius: 2,
   },
   rightSearchSec: {
     flexDirection: 'row',
@@ -164,6 +283,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 25,
     justifyContent: 'center',
+    elevation: 3,
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 1.15,
+    shadowRadius: 2,
+  },
+  modalTitleSec: {
+    width: '100%',
+    height: 72,
+    backgroundColor: '#F8F8F8',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 25,
   },
   normalTxt: {
     fontSize: 16,
@@ -194,20 +329,29 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginVertical: 30,
   },
-  centeredViewTranslator: {
+  centeredView: {
     flex: 1,
-    position: 'absolute',
-    right: 50,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
-  modalViewTranslator: {
-    width: 126,
-    height: 102,
-    borderRadius: 10,
-    backgroundColor: 'white',
+  inputTitleSec: {
+    width: '90%',
+    alignSelf: 'center',
+    marginBottom: 50,
+  },
+  uploadImgSec: {
+    width: '90%',
+    alignSelf: 'center',
+  },
+
+  modalView: {
+    width: '90%',
+    height: 610,
+    borderRadius: 22,
+    backgroundColor: white,
     borderWidth: 2,
     borderColor: 'rgba(217, 217, 217, 0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignSelf: 'center',
   },
   categoryTxtTranslator: {
     fontSize: 14,
